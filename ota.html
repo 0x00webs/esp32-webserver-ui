@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>OTA Update</title>
+    <link rel="stylesheet" href="style.css" />
+
+  </head>
+  <body>
+    <nav class="navbar">
+      <span class="navbar-brand">
+        <img src="sensors_logo.png" alt="sensors-logo" />
+        <span id="device-id"></span>
+      </span>
+      <button class="navbar-toggle" onclick="toggleNavbar()">&#9776;</button>
+      <div class="navbar-links" id="navbarLinks">
+        <a href="/">Home</a>
+        <a href="device-details.html">Device Details</a>
+        <a href="file-system.html">File Viewer</a>
+        <a href="ota.html">OTA</a>
+        <!-- <a href="advanced-settings.html">Advanced Settings</a> -->
+      </div>
+    </nav>
+    <main>
+      <div id="form_wrapper">
+        <div id="progress_wrapper">
+          <progress id="ota_progress" value="0" max="100"></progress>
+          <div><span>Uploaded </span><span id="progress_text">0%</span></div>
+        </div>
+        <form method="POST" id="ota_form" enctype="multipart/form-data">
+          <div class="input-container">
+            <label for="firmware">Choose a firmware bin file (2MB max): </label>
+            <input
+              type="file"
+              name="firmware"
+              id="firmware"
+              accept=".bin"
+              required
+            />
+          </div>
+          <input type="submit" value="Upload" />
+        </form>
+      </div>
+
+      <script>
+        const form = document.querySelector('#ota_form'),
+          inputFile = document.querySelector('#firmware'),
+          progressWrapper = document.querySelector('#progress_wrapper'),
+          progressBar = document.querySelector('#ota_progress');
+        ((progressText = document.querySelector('#progress_text')),
+          (log = document.createElement('p')));
+        form.addEventListener('submit', submitForm);
+
+        const maxFileSize = 2 * 1024 * 1024; // 2MB in bytes
+
+        function msgLogger(e, o) {
+          ((log.innerText = e),
+            (log.style.color = 'error' === o ? 'red' : '#00a080'),
+            form.appendChild(log));
+        }
+
+        function submitForm(e) {
+          e.preventDefault();
+          e.stopPropagation();
+          const fileName = inputFile.value;
+          const file = inputFile.files[0];
+          const fileSize = file ? file.size : 0;
+          const extension = fileName.split('.').pop();
+          if (extension !== 'bin') {
+            return void msgLogger('File must be bin file!', 'error');
+          } else if (fileSize > maxFileSize) {
+            return msgLogger('File too large!', 'error');
+          }
+
+          if (!confirm('I am sure about this.')) return;
+          console.log('Sending form data');
+
+          let xhr = new XMLHttpRequest();
+          xhr.timeout = 3e4;
+
+          const data = new FormData(form);
+          const files = new FormData();
+          files.append('firmware', data.get('firmware'));
+
+          xhr.onreadystatechange = function () {
+            if (xhr.readyState === 4 && xhr.status === 200) {
+              console.log(xhr.responseText);
+              let res_content_type = xhr.getResponseHeader('Content-Type');
+              if (res_content_type.includes('text/html')) {
+                document.body.innerHTML = xhr.responseText;
+              } else {
+                msgLogger(xhr.responseText);
+                setTimeout(() => {
+                  let e =
+                    '<p>File Saved Successfully!</p><p>Attempting firmware update...</p>';
+                  document.body.innerHTML = e;
+                }, 2e3);
+              }
+            }
+          };
+
+          xhr.upload.onloadstart = function (e) {
+            (console.log('upload started'),
+              console.log(`Event bytes: ${e.total} `),
+              (progressWrapper.style.display = 'flex'));
+          };
+
+          xhr.upload.onprogress = function (e) {
+            (console.log(`Loaded ${e.loaded} bytes of ${e.total}`),
+              (progressBar.max = e.total),
+              (progressBar.value = e.loaded),
+              (progressText.innerText =
+                Math.ceil((e.loaded / e.total) * 100) + '%'));
+          };
+
+          xhr.upload.ontimeout = function () {
+            msgLogger('Upload timeout', 'error');
+          };
+
+          xhr.open('POST', '/ota_upload');
+          xhr.send(files);
+        }
+
+        //   function handleSubmit(e) {
+        //     if (
+        //       (e.preventDefault(),
+        //       e.stopPropagation(),
+        //       (fileName = inputFile.value),
+        //       (extension = fileName.split(".").pop()),
+        //       "bin" !== extension)
+        //     )
+        //       return void console.log("Sending form data");
+        //     const o = "/ota_upload",
+        //       t = "POST";
+        //     let r = new XMLHttpRequest();
+        //     const n = new FormData(form),
+        //       s = new FormData();
+        //     s.append("firmware", n.get("firmware"));
+        //     for (const [e, o] of n) console.log(`${e}: ${o}`);
+        //     (r.onreadystatechange = function () {
+        //       if (4 === r.readyState && 200 === r.status) {
+        //         console.log(r.responseText);
+        //         let e = r.getResponseHeader("Content-Type");
+        //         e.includes("text/html")
+        //           ? (document.body.innerHTML = r.responseText)
+        //           : (msgLogger(r.responseText),
+        //             setTimeout(() => {
+        //               let e =
+        //                 " <p>File Saved Successfully!</p><p>Attempting firmware update...</p>";
+        //               document.body.innerHTML = e;
+        //             }, 2e3));
+        //       }
+        //     }),
+        //       (r.upload.onloadstart = function (e) {
+        //         console.log("upload started"),
+        //           console.log(`Event bytes: ${e.total} `),
+        //           (progressWrapper.style.display = "flex");
+        //       }),
+        //       (r.upload.onprogress = function (e) {
+        //         console.log(`Loaded ${e.loaded} bytes of ${e.total}`),
+        //           (progressBar.max = e.total),
+        //           (progressBar.value = e.loaded),
+        //           (progressText.innerText =
+        //             Math.ceil((e.loaded / e.total) * 100) + "%");
+        //       }),
+        //       (r.upload.ontimeout = function () {
+        //         msgLogger("Upload timeout", "error");
+        //       }),
+        //       (r.upload.onerror = function () {
+        //         msgLogger("Error uploading file", "error");
+        //       });
+        //     (r.timeout = 3e4), r.open(t, o), r.send(s);
+        //   }
+        //   const form = document.querySelector("#ota_form"),
+        //     inputFile = document.querySelector("#firmware"),
+        //     progressWrapper = document.querySelector("#progress_wrapper"),
+        //     progressBar = document.querySelector("#ota_progress");
+        //   (progressText = document.querySelector("#progress_text")),
+        //     (log = document.createElement("p"));
+        //   form.addEventListener("submit", handleSubmit);
+      </script>
+      <script>
+        function toggleNavbar() {
+          var links = document.getElementById('navbarLinks');
+          links.classList.toggle('active');
+        }
+      </script>
+      <script>
+        fetch('/device-id')
+          .then(response => {
+            if (!response.ok) {
+              throw new Error('Network response not ok ' + response.status);
+            }
+            return response.text();
+          })
+          .then(
+            deviceId =>
+              (document.getElementById('device-id').innerText = deviceId)
+          )
+          .catch(error => {
+            console.error('Error fetching device id:', error);
+          });
+      </script>
+    </main>
+  </body>
+</html>

@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Device Details</title>
+    <link rel="stylesheet" href="style.css" />
+
+
+  </head>
+
+  <body>
+    <nav class="navbar">
+      <span class="navbar-brand">
+        <img src="sensors_logo.png" alt="sensors-logo" />
+        <span id="device-id"></span>
+      </span>
+      <button class="navbar-toggle" onclick="toggleNavbar()">&#9776;</button>
+      <div class="navbar-links" id="navbarLinks">
+        <a href="/">Home</a>
+        <a href="device-details.html">Device Details</a>
+        <a href="file-system.html">File Viewer</a>
+        <a href="ota.html">OTA</a>
+        <!-- <a href="advanced-settings.html">Advanced Settings</a> -->
+      </div>
+    </nav>
+    <main>
+      <section class="device-info-wrapper">
+        <h2 style="text-align: center; color: #2fb56b">Device Details</h2>
+        <div class="info-group" id="gsm_info"></div>
+        <div class="info-group" id="wifi_info"></div>
+        <!-- <div class="info-group">
+          <h3>Location Details</h3>
+          <ul>
+            <li><strong>Country Name:</strong> Kenya</li>
+            <li><strong>Location Name:</strong> Nairobi</li>
+            <li><strong>Altitude:</strong> 1795 m</li>
+          </ul>
+        </div>
+        <div class="info-group">
+          <h3>Device Custodian</h3>
+          <ul>
+            <li><strong>Name:</strong> Jane Doe</li>
+            <li><strong>Contact Phone:</strong> +254712345678</li>
+            <li><strong>Contact Email:</strong> jane.doe@example.com</li>
+          </ul>
+        </div> -->
+      </section>
+    </main>
+    <script>
+      function toggleNavbar() {
+        var links = document.getElementById("navbarLinks");
+        links.classList.toggle("active");
+      }
+
+      function renderInfo(data, header) {
+        let html = `<h3>${header}</h3><ul>`;
+        for (const [k, v] of Object.entries(data)) {
+          let li = `<li><strong>${k}:</strong> ${v}</li>`;
+          html += li;
+        }
+        html += "</ul>";
+        return html;
+      }
+
+      fetch("/gsm_info")
+        .then((response) => response.json())
+        .then((data) => {
+          console.log("GSM info: ", data);
+          document.getElementById("gsm_info").innerHTML = renderInfo(
+            data,
+            "GSM &amp; Network",
+          );
+        })
+        .catch((err) => {
+          document.getElementById("gsm_info").textContent =
+            "Failed to load GSM info";
+          console.error(err);
+        });
+      fetch("/wifi-info")
+        .then((response) => response.json())
+        .then((data) => {
+          console.log("WiFi info: ", data);
+          document.getElementById("wifi_info").innerHTML = renderInfo(
+            data,
+            "WiFi",
+          );
+        })
+        .catch((err) => {
+          document.getElementById("wifi_info").textContent =
+            "Failed to load WiFi info";
+          console.error(err);
+        });
+    </script>
+    <script>
+      fetch("/device-id")
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error("Network response not ok " + response.status);
+          }
+          return response.text();
+        })
+        .then(
+          (deviceId) =>
+            (document.getElementById("device-id").innerText = deviceId),
+        )
+        .catch((error) => {
+          console.error("Error fetching device id:", error);
+        });
+    </script>
+  </body>
+</html>
