@@ -1,130 +1,62 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>File Viewer</title>
-    <link rel="stylesheet" href="style.css">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>File Viewer</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="scripts.js" defer></script>
+</head>
+<body>
+  <header class="site-header">
+    <div class="branding">
+      <img src="sensors_logo.png" alt="Sensors logo" class="logo">
+      <span class="device-id" id="device-id">--</span>
+    </div>
+    <nav class="main-nav">
+      <button class="nav-toggle" aria-label="Toggle navigation">&#9776;</button>
+      <ul class="nav-list" id="navList">
+        <li><a href="/" class="nav-link">Home</a></li>
+        <li><a href="device-details.html" class="nav-link">Device Details</a></li>
+        <li><a href="ota.html" class="nav-link">OTA</a></li>
+        <li><a href="file-system.html" class="nav-link">File Viewer</a></li>
+      </ul>
+    </nav>
+  </header>
 
- 
-  </head>
-  <body>
-    <main>
-      <nav class="navbar">
-        <span class="navbar-brand">
-          <img src="sensors_logo.png" alt="sensors-logo" />
-          <span id="device-id"></span>
-        </span>
-        <button class="navbar-toggle" onclick="toggleNavbar()">&#9776;</button>
-        <div class="navbar-links" id="navbarLinks">
-          <a href="/">Home</a>
-          <a href="device-details.html">Device Details</a>
-          <a href="file-system.html">File Viewer</a>
-          <a href="ota.html">OTA</a>
-          <!-- <a href="advanced-settings.html">Advanced Settings</a> -->
-        </div>
-      </nav>
-      <div style="text-align: center; padding: 0.5rem 0">
-        <p>Click on the icon ⏬ to download the file.</p>
-      </div>
-      <div id="file-system"></div>
-    </main>
-  </body>
+  <main class="container file-viewer-page">
+    <h1 class="page-title">File Viewer</h1>
+    <p class="info-text">Click the download icon ⏬ to save a file</p>
+    <div id="file-system" class="filesystem-tree"></div>
+  </main>
+
+  <footer class="site-footer">
+    <small>&copy; 2026 Sensor Webserver</small>
+  </footer>
 
   <script>
-    const fetchUrl = "/list-files";
-
-    // Recursive function to render directories and files
-    function renderTree(node, indent = 0, currentPath = "") {
-      let html = "";
-
-      for (const key in node) {
-        if (node.hasOwnProperty(key)) {
-          const fullPath = currentPath + "/" + key;
-          if (typeof node[key] === "object" && node[key] !== null) {
-            // remove arrays !Array.isArray(node[key])
-            html += `<div class="directory" style="margin-left:${
-              indent * 20
-            }px;"><strong>📁 ${key}</strong></div>`;
-            html += renderTree(node[key], indent + 1, fullPath);
-          } else if (node[key] === "file") {
-            html += `<div class="file" style="margin-left:${
-              indent * 20
-            }px;">📄 ${key}  
-              <a href="/download?file=${encodeURIComponent(
-                fullPath,
-              )}" class="file-link" download="${key}"><span>⏬</span></a>
-            </div>`;
+    (function(){
+      const fetchUrl='/list-files';
+      function renderTree(node, indent=0,currentPath=''){
+        let html='';
+        Object.entries(node).forEach(([key,val])=>{
+          const fullPath=currentPath+'/'+key;
+          if(typeof val === 'object' && val!==null){
+            html+=`<div class="directory" style="margin-left:${indent*1.25}rem;"><strong>📁 ${key}</strong></div>`;
+            html+=renderTree(val, indent+1, fullPath);
+          } else if(val==='file'){
+            html+=`<div class="file" style="margin-left:${indent*1.25}rem;">📄 ${key} <a href="/download?file=${encodeURIComponent(fullPath)}" class="file-link" download="${key}">⏬</a></div>`;
           }
-        }
+        });
+        return html;
       }
-
-      return html;
-    }
-
-    // Alternative function that sorts directories first, then files
-    function renderSortedTree(node, indent = 0, currentPath = "") {
-      let html = "";
-      const entries = Object.entries(node);
-
-      // Sort entries: directories first, then files
-      entries.sort(([keyA, valueA], [keyB, valueB]) => {
-        const aIsDir = typeof valueA === "object" && valueA !== null;
-        const bIsDir = typeof valueB === "object" && valueB !== null;
-
-        if (aIsDir && !bIsDir) return -1; // a is directory, b is file
-        if (!aIsDir && bIsDir) return 1; // a is file, b is directory
-        return keyA.localeCompare(keyB); // same type, sort alphabetically
-      });
-
-      for (const [key, value] of entries) {
-        const fullPath = currentPath + "/" + key;
-
-        if (value === "file") {
-          html += `<div class="file" style="margin-left:${indent * 20}px;">📄 
-              ${key}
-               <a href="/download?file=${encodeURIComponent(
-                 fullPath,
-               )}" class="file-link" download="${key}"><span>⏬</span></a>
-            </div>`;
-        } else if (typeof value === "object" && value !== null) {
-          html += `<div class="directory" style="margin-left:${
-            indent * 20
-          }px;"><strong>📁 ${key}</strong></div>`;
-          html += renderSortedTree(value, indent + 1, fullPath);
-        }
-      }
-
-      return html;
-    }
-
-    // Fetch and display the file system
-    fetch(fetchUrl)
-      .then((response) => response.json())
-      .then((data) => {
-        console.log("Received file structure: ", data);
-        document.getElementById("file-system").innerHTML = renderTree(data);
-      })
-      .catch((err) => {
-        document.getElementById("file-system").textContent =
-          "Failed to load file system.";
+      fetch(fetchUrl).then(r=>r.json()).then(data=>{
+        document.getElementById('file-system').innerHTML = renderTree(data);
+      }).catch(err=>{
+        document.getElementById('file-system').textContent='Failed to load file system.';
         console.error(err);
       });
+    })();
   </script>
-  <script>
-    fetch("/device-id")
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Network response not ok " + response.status);
-        }
-        return response.text();
-      })
-      .then(
-        (deviceId) =>
-          (document.getElementById("device-id").innerText = deviceId),
-      )
-      .catch((error) => {
-        console.error("Error fetching device id:", error);
-      });
-  </script>
+</body>
 </html>

@@ -1,213 +1,167 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Device Config</title>
-    <link rel="stylesheet" href="style.css">
-    <link
-      href="https://fonts.googleapis.com/css?family=Roboto:400,500&display=swap"
-      rel="stylesheet"
-    />
-  </head>
-  <body onload="loadDeviceSettings()">
-    <div class="container">
-      <div class="stepper">
-        <div id="step-ind-0" class="step-indicator active">1</div>
-        <div id="step-ind-1" class="step-indicator">2</div>
-        <div id="step-ind-2" class="step-indicator">3</div>
-      </div>
-      <form id="configForm" autocomplete="off">
-        <!-- Step 1: WiFi -->
-        <div class="step active" id="step-0">
-          <h2>
-            <span><img src="icons/wifi.svg" alt="wifi_icon" /></span>
-            WiFi Settings
-          </h2>
-          <div class="form-group">
-            <label>Select a WiFi Hotspot</label>
-            <ul class="hotspots-list" id="hotspots-list">
-              <li><span class="hotspot-ssid">Loading...</span></li>
-            </ul>
-          </div>
-          <div class="form-group">
-            <label for="ssid">WiFi SSID</label>
-            <input type="text" id="ssid" name="ssid" readonly />
-          </div>
-          <div class="form-group">
-            <label for="wifiPwd">WiFi Password</label>
-            <input type="password" id="wifiPwd" name="wifiPwd" />
-          </div>
-          <div class="step-btns">
-            <button type="button" class="next-btn" onclick="nextStep()">
-              Next
-            </button>
-          </div>
-        </div>
-        <!-- Step 2: GSM & SIM -->
-        <div class="step" id="step-1">
-          <h2>
-            <span><img src="icons/cell_tower.svg" alt="cell_tower" /></span>
-            GSM & SIM Config
-          </h2>
-          <div class="form-group">
-            <label for="apn">APN Username</label>
-            <input type="text" id="apn" name="apn" />
-          </div>
-          <div class="form-group">
-            <label for="apn_pwd">APN Password</label>
-            <input type="text" id="apn_pwd" name="apn_pwd" />
-          </div>
-          <div class="form-group">
-            <label for="simPin">SIM PIN</label>
-            <input type="password" id="simPin" name="simPin" maxlength="8" />
-          </div>
-          <div class="step-btns">
-            <button type="button" class="prev-btn" onclick="prevStep()">
-              Previous
-            </button>
-            <button type="button" class="next-btn" onclick="nextStep()">
-              Next
-            </button>
-          </div>
-        </div>
-        <!-- Step 3: Power Options -->
-        <div class="step" id="step-2">
-          <h2>Power Options</h2>
-          <div class="form-group toggle-switch">
-            <label for="powerSaver" style="margin-bottom: 0">Power Saver</label>
-            <label class="switch">
-              <input type="checkbox" id="powerSaver" name="powerSaver" />
-              <span class="slider"></span>
-            </label>
-          </div>
-          <div class="step-btns">
-            <button type="button" class="prev-btn" onclick="prevStep()">
-              Previous
-            </button>
-            <button type="submit" class="submit-btn">Save Config</button>
-          </div>
-        </div>
-      </form>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Device Config</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css?family=Roboto:400,500&display=swap" rel="stylesheet">
+  <script src="scripts.js" defer></script>
+</head>
+<body>
+  <header class="site-header">
+    <div class="branding">
+      <img src="sensors_logo.png" alt="Sensors logo" class="logo">
+      <span class="device-id" id="device-id">--</span>
     </div>
-    <button class="skip-btn" onclick="skipConfig()">Skip device config</button>
-    <script>
-      let currentStep = 0;
-      function showStep(idx) {
-        for (let i = 0; i < 3; i++) {
-          document.getElementById("step-" + i).classList.remove("active");
-          document.getElementById("step-ind-" + i).classList.remove("active");
-        }
-        document.getElementById("step-" + idx).classList.add("active");
-        document.getElementById("step-ind-" + idx).classList.add("active");
-        currentStep = idx;
+    <nav class="main-nav">
+      <button class="nav-toggle" aria-label="Toggle navigation">&#9776;</button>
+      <ul class="nav-list" id="navList">
+        <li><a href="/" class="nav-link">Home</a></li>
+        <li><a href="device-details.html" class="nav-link">Device Details</a></li>
+        <li><a href="ota.html" class="nav-link">OTA</a></li>
+        <li><a href="file-system.html" class="nav-link">File Viewer</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main class="container config-page">
+    <h1 class="page-title">Device Configuration</h1>
+    <form id="configForm" class="config-form" autocomplete="off">
+      <div class="stepper" role="tablist">
+        <button type="button" class="stepper__indicator stepper__indicator--active" data-step="0">1</button>
+        <button type="button" class="stepper__indicator" data-step="1">2</button>
+        <button type="button" class="stepper__indicator" data-step="2">3</button>
+      </div>
+
+      <fieldset class="step step--active" data-step="0">
+        <legend>WiFi Settings</legend>
+        <div class="form-group">
+          <label>Available hotspots</label>
+          <ul class="hotspots-list" id="hotspots-list">
+            <li class="hotspot">Loading...</li>
+          </ul>
+        </div>
+        <div class="form-group">
+          <label for="ssid">WiFi SSID</label>
+          <input type="text" id="ssid" name="ssid" readonly>
+        </div>
+        <div class="form-group">
+          <label for="wifiPwd">WiFi Password</label>
+          <input type="password" id="wifiPwd" name="wifiPwd">
+        </div>
+        <div class="step-btns">
+          <button type="button" class="btn btn--primary next-btn">Next</button>
+        </div>
+      </fieldset>
+
+      <fieldset class="step" data-step="1">
+        <legend>GSM &amp; SIM Config</legend>
+        <div class="form-group">
+          <label for="apn">APN Username</label>
+          <input type="text" id="apn" name="apn">
+        </div>
+        <div class="form-group">
+          <label for="apn_pwd">APN Password</label>
+          <input type="text" id="apn_pwd" name="apn_pwd">
+        </div>
+        <div class="form-group">
+          <label for="simPin">SIM PIN</label>
+          <input type="password" id="simPin" name="simPin" maxlength="8">
+        </div>
+        <div class="step-btns">
+          <button type="button" class="btn prev-btn">Previous</button>
+          <button type="button" class="btn btn--primary next-btn">Next</button>
+        </div>
+      </fieldset>
+
+      <fieldset class="step" data-step="2">
+        <legend>Power Options</legend>
+        <div class="form-group toggle-switch">
+          <label for="powerSaver">Power Saver</label>
+          <label class="switch">
+            <input type="checkbox" id="powerSaver" name="powerSaver">
+            <span class="slider"></span>
+          </label>
+        </div>
+        <div class="step-btns">
+          <button type="button" class="btn prev-btn">Previous</button>
+          <button type="submit" class="btn btn--primary submit-btn">Save Config</button>
+        </div>
+      </fieldset>
+    </form>
+    <button type="button" class="btn btn--secondary skip-btn">Skip device config</button>
+  </main>
+
+  <footer class="site-footer">
+    <small>&copy; 2026 Sensor Webserver</small>
+  </footer>
+
+  <script>
+    (function(){
+      let currentStep=0;
+      const steps = document.querySelectorAll('.step');
+      const indicators = document.querySelectorAll('.stepper__indicator');
+
+      function showStep(idx){
+        steps.forEach(step=>step.classList.toggle('step--active', step.dataset.step==idx));
+        indicators.forEach(ind=>ind.classList.toggle('stepper__indicator--active', ind.dataset.step==idx));
+        currentStep=idx;
       }
-      function nextStep() {
-        if (currentStep < 2) showStep(currentStep + 1);
-      }
-      function prevStep() {
-        if (currentStep > 0) showStep(currentStep - 1);
-      }
-      document
-        .getElementById("configForm")
-        .addEventListener("submit", function (e) {
-          e.preventDefault();
-          if (confirm("Are you sure you want to save these settings?")) {
-            alert("Saving settings...");
+
+      document.querySelectorAll('.next-btn').forEach(btn=>{
+        btn.addEventListener('click',()=>{ if(currentStep<steps.length-1) showStep(currentStep+1); });
+      });
+      document.querySelectorAll('.prev-btn').forEach(btn=>{
+        btn.addEventListener('click',()=>{ if(currentStep>0) showStep(currentStep-1);});
+      });
+      indicators.forEach(ind=>{
+        ind.addEventListener('click',()=>showStep(parseInt(ind.dataset.step)));
+      });
+
+      document.getElementById('configForm').addEventListener('submit',function(e){
+        e.preventDefault();
+        if(!confirm('Are you sure you want to save these settings?')) return;
+
+        const formData=new FormData(this);
+        const data={};
+        if(formData.get('ssid')===''){ formData.delete('ssid'); formData.delete('wifiPwd'); }
+        if(formData.get('apn')===''){ formData.delete('apn'); formData.delete('apn_pwd'); }
+        if(!formData.get('powerSaver')) formData.set('powerSaver','off');
+        formData.forEach((v,k)=>{ if(v.trim()!=='') data[k]=v;});
+        if(Object.keys(data).length===0){ alert('Cannot submit empty form!'); return; }
+        fetch('/save-config',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)})
+          .then(r=>r.json()).then(console.log);
+      });
+
+      function loadDeviceSettings(){ getAvailableWifiHotspots(); }
+      function getAvailableWifiHotspots(){
+        const list=document.getElementById('hotspots-list');
+        list.innerHTML='<li class="hotspot">Loading...</li>';
+        fetch('/available-hotspots').then(r=>r.json()).then(hotspots=>{
+          let html='';
+          let first='';
+          for(const ssid in hotspots){
+            const {rssi,encType}=hotspots[ssid];
+            const lock = encType>0 ? '<img src="icons/lock.svg" alt="locked">' : '';
+            html += `<li class="hotspot" id="hotspot-${ssid}" data-ssid="${ssid}">
+                    <span class="hotspot-ssid">${ssid}</span>
+                    <span class="hotspot-rssi">${rssi}dBm</span>
+                    <span class="hotspot-lock">${lock}</span>
+                 </li>`;
+            if(!first) first=ssid;
           }
-          const formData = new FormData(document.getElementById("configForm"));
-          const data = {};
-
-          // Extra validation
-          if (formData.get("ssid") === "") {
-            formData.delete("ssid");
-            formData.delete("wifiPwd");
-          }
-          if (formData.get("apn") === "") {
-            formData.delete("apn");
-            formData.delete("apn_pwd");
-          }
-
-          // ! make sure the value of Power Saver checkbox is parsed whether true or false
-          if (!formData.get("powerSaver")) formData.set("powerSaver", "off");
-
-          formData.forEach((value, key) => {
-            // Check if value is not empty
-            if (value.trim() !== "") data[key] = value;
-          });
-          if (Object.keys(data).length === 0) {
-            alert("Cannot submit and empty form!");
-            return;
-          }
-
-          console.log("Form data: ", data);
-          // Example: send to server
-          fetch("/save-config", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(data),
-          })
-            .then((res) => res.json())
-            .then((result) => {
-              console.log(result);
-            });
-        });
-
-      function loadDeviceSettings() {
-        getAvailableWifiHotspots();
+          list.innerHTML = html || '<li class="hotspot">No hotspots found</li>';
+          if(first) selectHotspot(first);
+        }).catch(()=>{ list.innerHTML='<li class="hotspot">Error loading hotspots</li>'; });
       }
-
-      function getAvailableWifiHotspots() {
-        let hotspotsList = document.getElementById("hotspots-list");
-        hotspotsList.innerHTML =
-          '<li><span class="hotspot-ssid">Loading...</span></li>';
-        const xhttp = new XMLHttpRequest();
-        xhttp.onload = function () {
-          const hotspots = JSON.parse(this.responseText);
-          let html = "";
-          let firstSsid = "";
-          for (const ssid in hotspots) {
-            let rssi = hotspots[ssid].rssi;
-            let encType = hotspots[ssid].encType;
-            let lockIcon =
-              encType > 0
-                ? '<span class="hotspot-sec"><img src="icons/lock.svg" /></span>'
-                : '<span class="hotspot-sec"></span>';
-            html += `<li onclick="selectHotspot('${ssid}')" id="hotspot-${ssid}">
-                      <span class="hotspot-ssid">${ssid}</span>
-                      <span class="hotspot-rssi">${rssi}dBm</span>
-                      ${lockIcon}
-                    </li>`;
-            if (!firstSsid) firstSsid = ssid;
-          }
-          hotspotsList.innerHTML =
-            html ||
-            '<li><span class="hotspot-ssid">No hotspots found</span></li>';
-          if (firstSsid) selectHotspot(firstSsid);
-        };
-        xhttp.open("GET", "/available-hotspots", true);
-        xhttp.send();
+      function selectHotspot(ssid){
+        document.querySelectorAll('#hotspots-list .hotspot').forEach(el=>el.classList.toggle('selected', el.dataset.ssid==ssid));
+        document.getElementById('ssid').value = ssid;
       }
-
-      function selectHotspot(ssid) {
-        let hotspotsList = document.getElementById("hotspots-list").children;
-        for (let i = 0; i < hotspotsList.length; i++) {
-          hotspotsList[i].classList.remove("selected");
-        }
-        let el = document.getElementById("hotspot-" + ssid);
-        if (el) el.classList.add("selected");
-        document.getElementById("ssid").value = ssid;
-      }
-
-      function skipConfig() {
-        fetch("/config?skip=true")
-          .then((response) => response.text())
-          .then((text) => {
-            console.log(text);
-            window.location.href = "/";
-          })
-          .catch((e) => console.error("Error skipping config: ", e));
-      }
-    </script>
-  </body>
+      window.loadDeviceSettings = loadDeviceSettings;
+      loadDeviceSettings();
+    })();
+  </script>
+</body>
 </html>
