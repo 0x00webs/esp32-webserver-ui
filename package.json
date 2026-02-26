@@ -1,0 +1,30 @@
+{
+	"dependencies": {
+		"csso": "^5.0.5",
+		"glob": "^13.0.6",
+		"html-minifier-terser": "^7.2.0",
+		"imagemin": "^9.0.1",
+		"imagemin-mozjpeg": "^10.0.0",
+		"imagemin-pngquant": "^10.0.0",
+		"imagemin-svgo": "^12.0.0",
+		"nodemon": "^3.1.14",
+		"purgecss": "^8.0.0",
+		"terser": "^5.46.0"
+	},
+	"description": "Build tools for minifying HTML/CSS for ESP32 webserver",
+	"devDependencies": {
+		"browser-sync": "^3.0.4"
+	},
+	"name": "sensors-webserver-pages",
+	"packageManager": "npm@11.8.0",
+	"private": true,
+	"scripts": {
+		"build": "node build.js",
+		"clean": "rm -rf output",
+		"gen-cert": "openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout local.key -out local.crt -subj '/CN=localhost'",
+		"preview": "browser-sync start --server 'output' --files 'output/**/*' --https --cert local.crt --key local.key",
+		"serve": "browser-sync start --server 'src' --files 'src/**/*' --https --cert local.crt --key local.key",
+		"watch": "nodemon --watch 'src/**/*.html' --watch src/style.css --watch src/scripts.js --watch 'src/assets/**/*' --exec \"npm run build\""
+	},
+	"version": "1.0.0"
+}
