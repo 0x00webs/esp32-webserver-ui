@@ -19,6 +19,15 @@ html {
 }
 
 /* body take all the available height and width, use flex for sticky footer */
+margin: 0;
+font-family: var(--font);
+color: var(--text);
+background: var(--bg);
+min-height: 100vh;
+min-height: 100dvh;
+display: flex;
+flex-direction: column;
+height: 100%;
 body {
 	margin: 0;
 	font-family: var(--font);
@@ -29,6 +38,20 @@ body {
 	display: flex;
 	flex-direction: column;
 	height: 100%;
+}
+
+main {
+	flex: 1 0 auto;
+}
+
+.site-footer {
+	margin-top: auto;
+	background: #f5f5f5;
+	text-align: center;
+	padding: 1rem 0;
+	font-size: 1.3rem;
+	color: #888;
+	border-top: 1px solid #e0e0e0;
 }
 
 .container {
@@ -66,10 +89,10 @@ body {
 	/* allow nav to expand across header and push toggle right
 	   (header uses space-between so nav normally shrinks to button). */
 	flex: 1;
-  /* make nav a flex container so the toggle can be flex-aligned */
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
+	/* make nav a flex container so the toggle can be flex-aligned */
+	display: flex;
+	justify-content: flex-end;
+	align-items: center;
 	/* we no longer need this; the menu will be positioned from the
 	   header instead so nav itself can remain static. */
 	position: static;
@@ -142,9 +165,9 @@ body {
 @media (max-width: 600px) {
 	.nav-toggle {
 		display: block;
-    /* ensure button does not stretch full width, so flex-end works */
-      width: auto;
-      margin-left: auto;
+		/* ensure button does not stretch full width, so flex-end works */
+		width: auto;
+		margin-left: auto;
 	}
 
 	/* dropdown now positions itself relative to the header, not the
