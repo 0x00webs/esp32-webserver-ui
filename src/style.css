@@ -66,7 +66,10 @@ body {
 	/* allow nav to expand across header and push toggle right
 	   (header uses space-between so nav normally shrinks to button). */
 	flex: 1;
-	text-align: right;
+  /* make nav a flex container so the toggle can be flex-aligned */
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
 	/* we no longer need this; the menu will be positioned from the
 	   header instead so nav itself can remain static. */
 	position: static;
@@ -139,6 +142,9 @@ body {
 @media (max-width: 600px) {
 	.nav-toggle {
 		display: block;
+    /* ensure button does not stretch full width, so flex-end works */
+      width: auto;
+      margin-left: auto;
 	}
 
 	/* dropdown now positions itself relative to the header, not the
