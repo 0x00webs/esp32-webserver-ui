@@ -10,73 +10,59 @@ console.log(`Serving static files from: ${path.join(__dirname, 'src')}`);
 app.use(express.static(path.join(__dirname, 'src')));
 
 // Demo endpoints
+
+// GET /device-id
 app.get('/device-id', (_req, res) => {
-	res.type('text/plain').send('DEMO-DEVICE-1234');
+	// Returns the device ID as plain text
+	res.type('text/plain').send('sensor‑ABC123');
 });
 
+// GET /list-files
 app.get('/list-files', (_req, res) => {
-	// Demo file system tree
 	res.json({
-		'logs': {
-			'2026-02-27.txt': 'file',
-			'2026-02-26.txt': 'file',
-		},
 		'config.json': 'file',
-		'firmware': {
-			'v1.0.0.bin': 'file',
+		'logs': {
+			'2025-01-01.csv': 'file',
+			'archive': {
+				'old.log': 'file',
+			},
 		},
 	});
 });
 
-app.get('/gsm_info', (_req, res) => {
-	res.json({
-		IMEI: '123456789012345',
-		Signal: 'Strong',
-		Carrier: 'DemoTel',
-		Status: 'Connected',
-	});
-});
-
-app.get('/wifi-info', (_req, res) => {
-	res.json({
-		SSID: 'DemoWiFi',
-		IP: '192.168.1.100',
-		Signal: 'Excellent',
-		Status: 'Connected',
-	});
-});
-
-app.get('/pm-data', (_req, res) => {
-	res.json({
-		'PM2.5': 12,
-		'PM10': 25,
-	});
-});
-
-app.get('/temperature', (_req, res) => {
-	res.json({ value: 23.5, unit: '°C' });
-});
-
-app.get('/humidity', (_req, res) => {
-	res.json({ value: 55, unit: '%' });
-});
-
+// GET /sensor-data
 app.get('/sensor-data', (_req, res) => {
 	res.json({
-		PM: {
-			'PM2.5': 12,
-			'PM10': 25,
-		},
 		DHT: {
-			temperature: 23.5,
-			humidity: 55,
+			temperature: 22.5,
+			humidity: 60,
+		},
+		PM: {
+			'PM1': 10,
+			'PM2.5': 20,
+			'PM10': 30,
 		},
 	});
 });
 
-// OTA upload demo endpoint (does not actually store files)
+// OTA upload demo endpoints (does not actually store files)
 app.post('/ota-upload', (_req, res) => {
 	res.json({ status: 'success', message: 'Firmware uploaded (demo)' });
+});
+
+// Single endpoint for all device details
+app.get('/device-details', (_req, res) => {
+	res.json({
+		gsm: {
+			'Network Name': 'TelcoX',
+			'Signal Strength': -72,
+			'SIM ICCID': '8914800000123456789',
+			'Model ID': 'Quectel‑EG91',
+			'Firmware Version': 'EG91R9M0A03',
+			'IMEI': '356789012345678',
+		},
+		wifi: {},
+	});
 });
 
 app.listen(PORT, () => {

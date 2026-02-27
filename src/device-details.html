@@ -39,8 +39,7 @@
 
 		<main class="container device-details-page">
 			<h1 class="page-title">Device Details</h1>
-			<section class="info-group" id="gsm_info"></section>
-			<section class="info-group" id="wifi_info"></section>
+			<section class="info-group" id="device_details"></section>
 		</main>
 
 		<footer class="site-footer">
@@ -49,8 +48,8 @@
 
 		<script>
 			(function () {
-				function renderInfo(data, header) {
-					let html = '<h2>' + header + '</h2><ul>';
+				function renderSection(header, data) {
+					let html = `<h2>${header}</h2><ul>`;
 					for (const [k, v] of Object.entries(data)) {
 						html += `<li><strong>${k}:</strong> ${v}</li>`;
 					}
@@ -58,27 +57,29 @@
 					return html;
 				}
 
-				fetch('/gsm_info')
+				fetch('/device-details')
 					.then((r) => r.json())
 					.then((data) => {
-						document.getElementById('gsm_info').innerHTML =
-							renderInfo(data, 'GSM & Network');
+						let html = '';
+						for (const [section, sectionData] of Object.entries(
+							data,
+						)) {
+							if (
+								sectionData &&
+								Object.keys(sectionData).length === 0 &&
+								sectionData.constructor === Object
+							) {
+								continue; // Skip if object is empty
+							}
+							const header = section.toUpperCase();
+							html += renderSection(header, sectionData);
+						}
+						document.getElementById('device_details').innerHTML =
+							html;
 					})
 					.catch((e) => {
-						document.getElementById('gsm_info').textContent =
-							'Failed to load GSM info';
-						console.error(e);
-					});
-
-				fetch('/wifi-info')
-					.then((r) => r.json())
-					.then((data) => {
-						document.getElementById('wifi_info').innerHTML =
-							renderInfo(data, 'WiFi');
-					})
-					.catch((e) => {
-						document.getElementById('wifi_info').textContent =
-							'Failed to load WiFi info';
+						document.getElementById('device_details').textContent =
+							'Failed to load device details';
 						console.error(e);
 					});
 			})();
