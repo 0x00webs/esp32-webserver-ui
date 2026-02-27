@@ -24,7 +24,7 @@
 		"gen-cert": "openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout local.key -out local.crt -subj '/CN=localhost'",
 		"preview": "browser-sync start --server 'output' --files 'output/**/*' --https --cert local.crt --key local.key",
 		"serve": "browser-sync start --server 'src' --files 'src/**/*' --https --cert local.crt --key local.key",
-		"watch": "nodemon --watch 'src/**/*.html' --watch src/style.css --watch src/scripts.js --watch 'src/assets/**/*' --exec \"npm run build\""
+		"watch": "nodemon --watch 'src/**/*.html' --watch src/style.css --watch src/scripts.js --watch 'src/icons/**/*' --exec \"npm run build\""
 	},
 	"version": "1.0.0"
 }

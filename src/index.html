@@ -1,88 +1,120 @@
 <!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Home</title>
-  <link rel="stylesheet" href="style.css">
-  <script src="scripts.js" defer></script>
-</head>
-<body>
-  <header class="site-header">
-    <div class="branding">
-      <img src="sensors_logo.png" alt="Sensors logo" class="logo">
-      <span class="device-id" id="device-id">--</span>
-    </div>
-    <nav class="main-nav">
-      <button class="nav-toggle" aria-label="Toggle navigation">&#9776;</button>
-      <ul class="nav-list" id="navList">
-        <li><a href="/" class="nav-link">Home</a></li>
-        <li><a href="device-details.html" class="nav-link">Device Details</a></li>
-        <li><a href="ota.html" class="nav-link">OTA</a></li>
-        <li><a href="file-system.html" class="nav-link">File Viewer</a></li>
-      </ul>
-    </nav>
-  </header>
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Home</title>
+		<link rel="stylesheet" href="style.css" />
+		<script src="scripts.js" defer></script>
+	</head>
+	<body>
+		<header class="site-header">
+			<div class="branding">
+				<img src="sensors_logo.png" alt="Sensors logo" class="logo" />
+				<span class="device-id" id="device-id">--</span>
+			</div>
+			<nav class="main-nav">
+				<button
+					class="nav-toggle"
+					aria-label="Toggle navigation"
+					aria-expanded="false">
+					<div></div>
+				</button>
+				<ul class="nav-list" id="navList">
+					<li><a href="/" class="nav-link">Home</a></li>
+					<li>
+						<a href="device-details.html" class="nav-link"
+							>Device Details</a
+						>
+					</li>
+					<li><a href="ota.html" class="nav-link">OTA</a></li>
+					<li>
+						<a href="file-system.html" class="nav-link"
+							>File Viewer</a
+						>
+					</li>
+				</ul>
+			</nav>
+		</header>
 
-  <main class="container">
-    <section class="sensor-overview">
-      <h1 class="page-title">Sensor Data Overview</h1>
-      <div class="sensor-overview__groups">
-        <article class="sensor-group">
-          <h2 class="sensor-group__title">Air Quality</h2>
-          <div class="sensor-group__data" id="PM_DATA">Unavailable</div>
-        </article>
-        <article class="sensor-group">
-          <h2 class="sensor-group__title">Environment</h2>
-          <div class="sensor-group__data">
-            <div class="sensor-data__row">
-              <span class="sensor-data__label">Temperature:</span>
-              <span class="sensor-data__value" id="temperature"></span>
-            </div>
-            <div class="sensor-data__row">
-              <span class="sensor-data__label">Humidity:</span>
-              <span class="sensor-data__value" id="humidity">Unavailable</span>
-            </div>
-          </div>
-        </article>
-      </div>
-    </section>
-  </main>
+		<main class="container">
+			<section class="sensor-overview">
+				<h1 class="page-title">Sensor Data Overview</h1>
+				<div class="sensor-overview__groups">
+					<article class="sensor-group">
+						<h2 class="sensor-group__title">Air Quality</h2>
+						<div class="sensor-group__data" id="PM_DATA">
+							Unavailable
+						</div>
+					</article>
+					<article class="sensor-group">
+						<h2 class="sensor-group__title">Environment</h2>
+						<div class="sensor-group__data">
+							<div class="sensor-data__row">
+								<span class="sensor-data__label"
+									>Temperature:</span
+								>
+								<span
+									class="sensor-data__value"
+									id="temperature"></span>
+							</div>
+							<div class="sensor-data__row">
+								<span class="sensor-data__label"
+									>Humidity:</span
+								>
+								<span class="sensor-data__value" id="humidity"
+									>Unavailable</span
+								>
+							</div>
+						</div>
+					</article>
+				</div>
+			</section>
+		</main>
 
-  <footer class="site-footer">
-    <small>&copy; 2026 Sensor Webserver</small>
-  </footer>
+		<footer class="site-footer">
+			<small>&copy; 2026 Sensor Webserver</small>
+		</footer>
 
-  <script>
-    (function(){
-      const dataElTemplate = '<div><strong>$param:</strong> <span>$value $units</span></div>';
-      const PM_data = document.getElementById('PM_DATA');
-      const temperature = document.getElementById('temperature');
-      const humidity = document.getElementById('humidity');
+		<script>
+			(function () {
+				const dataElTemplate =
+					'<div><strong>$param:</strong> <span>$value $units</span></div>';
+				const PM_data = document.getElementById('PM_DATA');
+				const temperature = document.getElementById('temperature');
+				const humidity = document.getElementById('humidity');
 
-      function fetchData() {
-        fetch('/sensor-data').then(r=>r.json()).then(data=>{
-          if(data){
-            if(data.PM){
-              let html='';
-              Object.entries(data.PM).forEach(([pm,val])=>{
-                let el = dataElTemplate.replace('$param', pm)
-                                        .replace('$value', val)
-                                        .replace('$units','ug/m3');
-                html += el;
-              });
-              PM_data.innerHTML = html;
-            }
-            if(data.DHT){
-              temperature.textContent = data.DHT.temperature + '°C';
-              humidity.textContent = data.DHT.humidity + '%';
-            }
-          }
-        }).catch(console.error);
-      }
-      fetchData();
-      setInterval(fetchData, 5*60*1000);
-    })();
-  </script>
-</body>
+				function fetchData() {
+					fetch('/sensor-data')
+						.then((r) => r.json())
+						.then((data) => {
+							if (data) {
+								if (data.PM) {
+									let html = '';
+									Object.entries(data.PM).forEach(
+										([pm, val]) => {
+											let el = dataElTemplate
+												.replace('$param', pm)
+												.replace('$value', val)
+												.replace('$units', 'ug/m3');
+											html += el;
+										},
+									);
+									PM_data.innerHTML = html;
+								}
+								if (data.DHT) {
+									temperature.textContent =
+										data.DHT.temperature + '°C';
+									humidity.textContent =
+										data.DHT.humidity + '%';
+								}
+							}
+						})
+						.catch(console.error);
+				}
+				fetchData();
+				setInterval(fetchData, 5 * 60 * 1000);
+			})();
+		</script>
+	</body>
 </html>

@@ -1,62 +1,80 @@
 <!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>File Viewer</title>
-  <link rel="stylesheet" href="style.css">
-  <script src="scripts.js" defer></script>
-</head>
-<body>
-  <header class="site-header">
-    <div class="branding">
-      <img src="sensors_logo.png" alt="Sensors logo" class="logo">
-      <span class="device-id" id="device-id">--</span>
-    </div>
-    <nav class="main-nav">
-      <button class="nav-toggle" aria-label="Toggle navigation">&#9776;</button>
-      <ul class="nav-list" id="navList">
-        <li><a href="/" class="nav-link">Home</a></li>
-        <li><a href="device-details.html" class="nav-link">Device Details</a></li>
-        <li><a href="ota.html" class="nav-link">OTA</a></li>
-        <li><a href="file-system.html" class="nav-link">File Viewer</a></li>
-      </ul>
-    </nav>
-  </header>
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>File Viewer</title>
+		<link rel="stylesheet" href="style.css" />
+		<script src="scripts.js" defer></script>
+	</head>
+	<body>
+		<header class="site-header">
+			<div class="branding">
+				<img src="sensors_logo.png" alt="Sensors logo" class="logo" />
+				<span class="device-id" id="device-id">--</span>
+			</div>
+			<nav class="main-nav">
+				<button
+					class="nav-toggle"
+					aria-label="Toggle navigation"
+					aria-expanded="false">
+					<div></div>
+				</button>
+				<ul class="nav-list" id="navList">
+					<li><a href="/" class="nav-link">Home</a></li>
+					<li>
+						<a href="device-details.html" class="nav-link"
+							>Device Details</a
+						>
+					</li>
+					<li><a href="ota.html" class="nav-link">OTA</a></li>
+					<li>
+						<a href="file-system.html" class="nav-link"
+							>File Viewer</a
+						>
+					</li>
+				</ul>
+			</nav>
+		</header>
 
-  <main class="container file-viewer-page">
-    <h1 class="page-title">File Viewer</h1>
-    <p class="info-text">Click the download icon ⏬ to save a file</p>
-    <div id="file-system" class="filesystem-tree"></div>
-  </main>
+		<main class="container file-viewer-page">
+			<h1 class="page-title">File Viewer</h1>
+			<p class="info-text">Click the download icon ⏬ to save a file</p>
+			<div id="file-system" class="filesystem-tree"></div>
+		</main>
 
-  <footer class="site-footer">
-    <small>&copy; 2026 Sensor Webserver</small>
-  </footer>
+		<footer class="site-footer">
+			<small>&copy; 2026 Sensor Webserver</small>
+		</footer>
 
-  <script>
-    (function(){
-      const fetchUrl='/list-files';
-      function renderTree(node, indent=0,currentPath=''){
-        let html='';
-        Object.entries(node).forEach(([key,val])=>{
-          const fullPath=currentPath+'/'+key;
-          if(typeof val === 'object' && val!==null){
-            html+=`<div class="directory" style="margin-left:${indent*1.25}rem;"><strong>📁 ${key}</strong></div>`;
-            html+=renderTree(val, indent+1, fullPath);
-          } else if(val==='file'){
-            html+=`<div class="file" style="margin-left:${indent*1.25}rem;">📄 ${key} <a href="/download?file=${encodeURIComponent(fullPath)}" class="file-link" download="${key}">⏬</a></div>`;
-          }
-        });
-        return html;
-      }
-      fetch(fetchUrl).then(r=>r.json()).then(data=>{
-        document.getElementById('file-system').innerHTML = renderTree(data);
-      }).catch(err=>{
-        document.getElementById('file-system').textContent='Failed to load file system.';
-        console.error(err);
-      });
-    })();
-  </script>
-</body>
+		<script>
+			(function () {
+				const fetchUrl = '/list-files';
+				function renderTree(node, indent = 0, currentPath = '') {
+					let html = '';
+					Object.entries(node).forEach(([key, val]) => {
+						const fullPath = currentPath + '/' + key;
+						if (typeof val === 'object' && val !== null) {
+							html += `<div class="directory" style="margin-left:${indent * 1.25}rem;"><strong>📁 ${key}</strong></div>`;
+							html += renderTree(val, indent + 1, fullPath);
+						} else if (val === 'file') {
+							html += `<div class="file" style="margin-left:${indent * 1.25}rem;">📄 ${key} <a href="/download?file=${encodeURIComponent(fullPath)}" class="file-link" download="${key}">⏬</a></div>`;
+						}
+					});
+					return html;
+				}
+				fetch(fetchUrl)
+					.then((r) => r.json())
+					.then((data) => {
+						document.getElementById('file-system').innerHTML =
+							renderTree(data);
+					})
+					.catch((err) => {
+						document.getElementById('file-system').textContent =
+							'Failed to load file system.';
+						console.error(err);
+					});
+			})();
+		</script>
+	</body>
 </html>

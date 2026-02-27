@@ -1,392 +1,432 @@
 :root {
-  --primary: #2fb56b;
-  --primary-dark: #27915e;
-  --accent: #ff9800;
-  --text: #333;
-  --bg: #fff;
-  --max-width: 800px;
-  --radius: 0.25rem;
-  --transition: 0.3s ease;
-  --font: 'Roboto', sans-serif;
+	--primary: #2fb56b;
+	--primary-dark: #27915e;
+	--accent: #ff9800;
+	--text: #333;
+	--bg: #fff;
+	--max-width: 800px;
+	--radius: 0.25rem;
+	--transition: 0.3s ease;
+	--font: 'Roboto', sans-serif;
 }
 
 html {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  /* 1rem = 10px */
-  font-size: 62.5%;
-  scroll-behavior: smooth;
-  height: 100%;
+	font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+	/* 1rem = 10px */
+	font-size: 62.5%;
+	scroll-behavior: smooth;
+	height: 100%;
 }
 
 /* body take all the available height and width, use flex for sticky footer */
 body {
-  margin: 0;
-  font-family: var(--font);
-  color: var(--text);
-  background: var(--bg);
-  min-height: 100vh;
-  min-height: 100dvh;
-  display: flex;
-  flex-direction: column;
-  height: 100%;
+	margin: 0;
+	font-family: var(--font);
+	color: var(--text);
+	background: var(--bg);
+	min-height: 100vh;
+	min-height: 100dvh;
+	display: flex;
+	flex-direction: column;
+	height: 100%;
 }
 
 .container {
-  width: 90%;
-  max-width: var(--max-width);
-  margin: 0 auto;
-  padding: 2rem 0;
+	width: 90%;
+	max-width: var(--max-width);
+	margin: 0 auto;
+	padding: 2rem 0;
 }
 
 .site-header {
-  background: var(--primary);
-  color: #fff;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 1rem 2rem;
-  position: relative;
+	background: var(--primary);
+	color: #fff;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 1rem 2rem;
+	position: relative;
 }
 
 .branding {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
 }
 
 .logo {
-  height: 2.4rem;
+	height: 2.4rem;
 }
 
 .device-id {
-  font-weight: 600;
+	font-weight: 600;
 }
 
 .main-nav {
-  position: relative;
+	/* allow nav to expand across header and push toggle right
+	   (header uses space-between so nav normally shrinks to button). */
+	flex: 1;
+	text-align: right;
+	/* we no longer need this; the menu will be positioned from the
+	   header instead so nav itself can remain static. */
+	position: static;
 }
 
 .nav-toggle {
-  display: none;
-  background: none;
-  border: none;
-  color: #fff;
-  font-size: 2rem;
-  cursor: pointer;
+	display: none;
+	background: none;
+	border: none;
+	color: #fff;
+	font-size: 2.4rem;
+	/* a touch larger for fat fingers */
+	padding: 0.2rem 0.4rem;
+	cursor: pointer;
+	line-height: 1;
+}
+
+/* simple hamburger icon using pseudo-elements instead of text char */
+.nav-toggle {
+	position: relative;
+}
+
+.nav-toggle::before,
+.nav-toggle::after,
+.nav-toggle div {
+	content: '';
+	display: block;
+	width: 1.8rem;
+	height: 2px;
+	background: currentColor;
+	margin: 4px auto;
+	transition:
+		transform var(--transition),
+		opacity var(--transition);
+}
+
+.nav-toggle.open::before {
+	transform: translateY(6px) rotate(45deg);
+}
+
+.nav-toggle.open::after {
+	transform: translateY(-6px) rotate(-45deg);
+}
+
+.nav-toggle.open div {
+	opacity: 0;
 }
 
 .nav-list {
-  list-style: none;
-  display: flex;
-  gap: 1.5rem;
-  margin: 0;
-  padding: 0;
+	list-style: none;
+	display: flex;
+	gap: 1.5rem;
+	margin: 0;
+	padding: 0;
 }
 
 .nav-link {
-  color: #fff;
-  text-decoration: none;
-  padding: 0.5rem;
-  transition: background var(--transition);
+	color: #fff;
+	text-decoration: none;
+	padding: 0.5rem;
+	transition: background var(--transition);
 }
 
 .nav-link:hover,
 .nav-link:focus {
-  background: var(--primary-dark);
-  border-radius: var(--radius);
+	background: var(--primary-dark);
+	border-radius: var(--radius);
 }
 
 @media (max-width: 600px) {
-  .nav-toggle {
-    display: block;
-  }
+	.nav-toggle {
+		display: block;
+	}
 
-  .nav-list {
-    display: none;
-    flex-direction: column;
-    background: var(--primary);
-    position: absolute;
-    top: 100%;
-    left: 0;
-    width: 100%;
-  }
+	/* dropdown now positions itself relative to the header, not the
+	   nav wrapper; header already has `position: relative`. making it
+	   full‑width with left/right edges lets it match the header width
+	   and slide down from the bottom. */
+	.nav-list {
+		display: flex;
+		flex-direction: column;
+		background: var(--primary);
+		position: absolute;
+		top: 100%;
+		left: 0;
+		right: 0;
+		/* remove explicit width so left+right determine size */
+		/* width: 100%; */
+		z-index: 100;
+		max-height: 0;
+		overflow: hidden;
+		transition: max-height 0.3s ease;
+	}
 
-  .nav-list.active {
-    display: flex;
-  }
-}
+	/* enlarge tap area of links and make them fill width */
+	.nav-list .nav-link {
+		display: block;
+		padding: 1rem 1.5rem;
+	}
 
-/* site footer stick at the bottom */
-.site-footer {
-  margin-top: auto;
-  width: 100%;
-  background: var(--primary);
-  color: #fff;
-  text-align: center;
-  padding: 1rem;
-}
-
-.page-title {
-  text-align: center;
-  color: var(--primary);
-  margin-bottom: 2rem;
-  font-size: 2.4rem;
+	.nav-list.active {
+		/* enough height to show all items; could use 100vh if you prefer */
+		max-height: 500px;
+	}
 }
 
 .btn {
-  display: inline-block;
-  padding: 0.6rem 1.2rem;
-  border: none;
-  border-radius: var(--radius);
-  cursor: pointer;
-  font-size: 1.4rem;
-  transition: background var(--transition);
+	display: inline-block;
+	padding: 0.6rem 1.2rem;
+	border: none;
+	border-radius: var(--radius);
+	cursor: pointer;
+	font-size: 1.4rem;
+	transition: background var(--transition);
 }
 
 .btn--primary {
-  background: var(--primary);
-  color: #fff;
+	background: var(--primary);
+	color: #fff;
 }
 
 .btn--primary:hover {
-  background: var(--primary-dark);
+	background: var(--primary-dark);
 }
 
 .btn--secondary {
-  background: #ccc;
-  color: #333;
+	background: #ccc;
+	color: #333;
 }
 
 .btn--secondary:hover {
-  background: #bbb;
+	background: #bbb;
 }
 
 .info-text {
-  text-align: center;
-  margin-bottom: 1rem;
+	text-align: center;
+	margin-bottom: 1rem;
 }
 
 /* sensor page */
 .sensor-overview__groups {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 2rem;
-  justify-content: center;
+	display: flex;
+	flex-wrap: wrap;
+	gap: 2rem;
+	justify-content: center;
 }
 
 .sensor-group {
-  background: #fafafa;
-  border: 1px solid #e0e0e0;
-  border-radius: var(--radius);
-  padding: 1.5rem;
-  width: 300px;
+	background: #fafafa;
+	border: 1px solid #e0e0e0;
+	border-radius: var(--radius);
+	padding: 1.5rem;
+	width: 300px;
 }
 
 .sensor-group__title {
-  margin-top: 0;
-  font-size: 1.8rem;
+	margin-top: 0;
+	font-size: 1.8rem;
 }
 
 .sensor-data__row {
-  display: flex;
-  justify-content: space-between;
-  margin: 0.5rem 0;
+	display: flex;
+	justify-content: space-between;
+	margin: 0.5rem 0;
 }
 
 .sensor-data__label {
-  font-weight: 500;
+	font-weight: 500;
 }
 
 /* device details */
 .info-group {
-  margin-bottom: 2rem;
+	margin-bottom: 2rem;
 }
 
 .info-group h2 {
-  margin-top: 0;
-  color: var(--primary);
+	margin-top: 0;
+	color: var(--primary);
 }
 
 /* file viewer tree */
 .filesystem-tree {
-  font-family: monospace;
-  line-height: 1.6;
+	font-family: monospace;
+	line-height: 1.6;
 }
 
 .directory,
 .file {
-  padding: 0.2rem 0;
+	padding: 0.2rem 0;
 }
 
 /* ota page */
 .ota-form {
-  max-width: 400px;
-  margin: 0 auto;
+	max-width: 400px;
+	margin: 0 auto;
 }
 
 .progress-wrapper {
-  margin-top: 1rem;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+	margin-top: 1rem;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
 }
 
 .progress-text {
-  margin-top: 0.5rem;
+	margin-top: 0.5rem;
 }
 
 /* config page */
 .config-form {
-  max-width: 600px;
-  margin: 0 auto;
+	max-width: 600px;
+	margin: 0 auto;
 }
 
 .stepper {
-  display: flex;
-  justify-content: center;
-  gap: 1rem;
-  margin-bottom: 2rem;
+	display: flex;
+	justify-content: center;
+	gap: 1rem;
+	margin-bottom: 2rem;
 }
 
 .stepper__indicator {
-  width: 2.4rem;
-  height: 2.4rem;
-  border: 2px solid var(--primary);
-  border-radius: 50%;
-  background: #fff;
-  color: var(--primary);
-  cursor: pointer;
+	width: 2.4rem;
+	height: 2.4rem;
+	border: 2px solid var(--primary);
+	border-radius: 50%;
+	background: #fff;
+	color: var(--primary);
+	cursor: pointer;
 }
 
 .stepper__indicator--active {
-  background: var(--primary);
-  color: #fff;
+	background: var(--primary);
+	color: #fff;
 }
 
 .step {
-  display: none;
+	display: none;
 }
 
 .step--active {
-  display: block;
+	display: block;
 }
 
 .form-group {
-  margin-bottom: 1.5rem;
+	margin-bottom: 1.5rem;
 }
 
 .form-group label {
-  display: block;
-  margin-bottom: 0.5rem;
+	display: block;
+	margin-bottom: 0.5rem;
 }
 
 .form-group input[type='text'],
 .form-group input[type='password'],
 .form-group input[type='file'] {
-  width: 100%;
-  padding: 0.6rem;
-  border: 1px solid #ccc;
-  border-radius: var(--radius);
-  box-sizing: border-box;
+	width: 100%;
+	padding: 0.6rem;
+	border: 1px solid #ccc;
+	border-radius: var(--radius);
+	box-sizing: border-box;
 }
 
 .step-btns {
-  display: flex;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 1rem;
+	display: flex;
+	justify-content: space-between;
+	flex-wrap: wrap;
+	gap: 1rem;
 }
 
 .toggle-switch .switch {
-  position: relative;
-  display: inline-block;
-  width: 3.4rem;
-  height: 1.8rem;
+	position: relative;
+	display: inline-block;
+	width: 3.4rem;
+	height: 1.8rem;
 }
 
 .toggle-switch .switch input {
-  opacity: 0;
-  width: 0;
-  height: 0;
+	opacity: 0;
+	width: 0;
+	height: 0;
 }
 
 .toggle-switch .slider {
-  position: absolute;
-  cursor: pointer;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: #ccc;
-  border-radius: 1rem;
-  transition: 0.2s;
+	position: absolute;
+	cursor: pointer;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background: #ccc;
+	border-radius: 1rem;
+	transition: 0.2s;
 }
 
 .toggle-switch .slider:before {
-  position: absolute;
-  content: '';
-  height: 1.4rem;
-  width: 1.4rem;
-  left: 0.2rem;
-  bottom: 0.2rem;
-  background: #fff;
-  transition: 0.2s;
-  border-radius: 50%;
+	position: absolute;
+	content: '';
+	height: 1.4rem;
+	width: 1.4rem;
+	left: 0.2rem;
+	bottom: 0.2rem;
+	background: #fff;
+	transition: 0.2s;
+	border-radius: 50%;
 }
 
-.toggle-switch input:checked+.slider {
-  background: var(--primary);
+.toggle-switch input:checked + .slider {
+	background: var(--primary);
 }
 
-.toggle-switch input:checked+.slider:before {
-  transform: translateX(1.6rem);
+.toggle-switch input:checked + .slider:before {
+	transform: translateX(1.6rem);
 }
 
 .hotspots-list {
-  list-style: none;
-  margin: 0;
-  padding: 0;
+	list-style: none;
+	margin: 0;
+	padding: 0;
 }
 
 .hotspot {
-  padding: 0.6rem;
-  border: 1px solid #ddd;
-  border-radius: var(--radius);
-  margin-bottom: 0.5rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  cursor: pointer;
+	padding: 0.6rem;
+	border: 1px solid #ddd;
+	border-radius: var(--radius);
+	margin-bottom: 0.5rem;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	cursor: pointer;
 }
 
 .hotspot.selected {
-  background: var(--primary);
-  color: #fff;
+	background: var(--primary);
+	color: #fff;
 }
 
 .password-wrapper {
-  position: relative;
+	position: relative;
 }
 
 .password-wrapper input {
-  width: 100%;
-  padding-right: 3rem;
-  /* room for toggle button */
+	width: 100%;
+	padding-right: 3rem;
+	/* room for toggle button */
 }
 
 .password-wrapper .toggle-password {
-  position: absolute;
-  right: 0.5rem;
-  top: 50%;
-  transform: translateY(-50%);
-  background: none;
-  border: none;
-  cursor: pointer;
-  font-size: 1.4rem;
+	position: absolute;
+	right: 0.5rem;
+	top: 50%;
+	transform: translateY(-50%);
+	background: none;
+	border: none;
+	cursor: pointer;
+	font-size: 1.4rem;
 }
 
 .skip-btn {
-  margin-top: 2rem;
-  display: block;
-  width: 100%;
+	margin-top: 2rem;
+	display: block;
+	width: 100%;
 }

@@ -1,64 +1,87 @@
 <!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Device Details</title>
-  <link rel="stylesheet" href="style.css">
-  <script src="scripts.js" defer></script>
-</head>
-<body>
-  <header class="site-header">
-    <div class="branding">
-      <img src="sensors_logo.png" alt="Sensors logo" class="logo">
-      <span class="device-id" id="device-id">--</span>
-    </div>
-    <nav class="main-nav">
-      <button class="nav-toggle" aria-label="Toggle navigation">&#9776;</button>
-      <ul class="nav-list" id="navList">
-        <li><a href="/" class="nav-link">Home</a></li>
-        <li><a href="device-details.html" class="nav-link">Device Details</a></li>
-        <li><a href="ota.html" class="nav-link">OTA</a></li>
-        <li><a href="file-system.html" class="nav-link">File Viewer</a></li>
-      </ul>
-    </nav>
-  </header>
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Device Details</title>
+		<link rel="stylesheet" href="style.css" />
+		<script src="scripts.js" defer></script>
+	</head>
+	<body>
+		<header class="site-header">
+			<div class="branding">
+				<img src="sensors_logo.png" alt="Sensors logo" class="logo" />
+				<span class="device-id" id="device-id">--</span>
+			</div>
+			<nav class="main-nav">
+				<button
+					class="nav-toggle"
+					aria-label="Toggle navigation"
+					aria-expanded="false">
+					<div></div>
+				</button>
+				<ul class="nav-list" id="navList">
+					<li><a href="/" class="nav-link">Home</a></li>
+					<li>
+						<a href="device-details.html" class="nav-link"
+							>Device Details</a
+						>
+					</li>
+					<li><a href="ota.html" class="nav-link">OTA</a></li>
+					<li>
+						<a href="file-system.html" class="nav-link"
+							>File Viewer</a
+						>
+					</li>
+				</ul>
+			</nav>
+		</header>
 
-  <main class="container device-details-page">
-    <h1 class="page-title">Device Details</h1>
-    <section class="info-group" id="gsm_info"></section>
-    <section class="info-group" id="wifi_info"></section>
-  </main>
+		<main class="container device-details-page">
+			<h1 class="page-title">Device Details</h1>
+			<section class="info-group" id="gsm_info"></section>
+			<section class="info-group" id="wifi_info"></section>
+		</main>
 
-  <footer class="site-footer">
-    <small>&copy; 2026 Sensor Webserver</small>
-  </footer>
+		<footer class="site-footer">
+			<small>&copy; 2026 Sensor Webserver</small>
+		</footer>
 
-  <script>
-    (function(){
-      function renderInfo(data, header){
-        let html = '<h2>'+header+'</h2><ul>';
-        for(const [k,v] of Object.entries(data)){
-          html += `<li><strong>${k}:</strong> ${v}</li>`;
-        }
-        html += '</ul>';
-        return html;
-      }
+		<script>
+			(function () {
+				function renderInfo(data, header) {
+					let html = '<h2>' + header + '</h2><ul>';
+					for (const [k, v] of Object.entries(data)) {
+						html += `<li><strong>${k}:</strong> ${v}</li>`;
+					}
+					html += '</ul>';
+					return html;
+				}
 
-      fetch('/gsm_info').then(r=>r.json()).then(data=>{
-        document.getElementById('gsm_info').innerHTML = renderInfo(data, 'GSM & Network');
-      }).catch(e=>{
-        document.getElementById('gsm_info').textContent='Failed to load GSM info';
-        console.error(e);
-      });
+				fetch('/gsm_info')
+					.then((r) => r.json())
+					.then((data) => {
+						document.getElementById('gsm_info').innerHTML =
+							renderInfo(data, 'GSM & Network');
+					})
+					.catch((e) => {
+						document.getElementById('gsm_info').textContent =
+							'Failed to load GSM info';
+						console.error(e);
+					});
 
-      fetch('/wifi-info').then(r=>r.json()).then(data=>{
-        document.getElementById('wifi_info').innerHTML = renderInfo(data,'WiFi');
-      }).catch(e=>{
-        document.getElementById('wifi_info').textContent='Failed to load WiFi info';
-        console.error(e);
-      });
-    })();
-  </script>
-</body>
+				fetch('/wifi-info')
+					.then((r) => r.json())
+					.then((data) => {
+						document.getElementById('wifi_info').innerHTML =
+							renderInfo(data, 'WiFi');
+					})
+					.catch((e) => {
+						document.getElementById('wifi_info').textContent =
+							'Failed to load WiFi info';
+						console.error(e);
+					});
+			})();
+		</script>
+	</body>
 </html>

@@ -22,7 +22,14 @@ async function build() {
 		outDir,
 		srcDir,
 	);
-	await processHtml(htmlFiles, minifiedCss, minifiedScript, outDir, srcDir);
+	// use named options to avoid argument-order bugs
+	await processHtml({
+		htmlFiles,
+		minifiedCss,
+		minifiedScript,
+		outDir,
+		srcDir,
+	});
 
 	console.log('build complete, output in:', outDir);
 }
