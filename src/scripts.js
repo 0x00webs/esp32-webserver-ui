@@ -4,6 +4,7 @@
 function initCommon() {
   const navToggle = document.querySelector('.nav-toggle');
   const navList = document.getElementById('navList');
+  const currentPath = window.location.pathname;
 
   if (navToggle && navList) {
     // add a little <div> inside button for hamburger lines
@@ -19,10 +20,19 @@ function initCommon() {
 
     // close the menu when a navigation link is tapped
     navList.querySelectorAll('a').forEach((a) => {
+      // set active class on current link
+      if (a.pathname === currentPath) {
+        a.classList.add('active');
+      }
+
       a.addEventListener('click', () => {
         navList.classList.remove('active');
         navToggle.classList.remove('open');
         navToggle.setAttribute('aria-expanded', 'false');
+        navList
+          .querySelectorAll('a')
+          .forEach((link) => link.classList.remove('active'));
+        a.classList.add('active');
       });
     });
   }

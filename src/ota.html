@@ -37,39 +37,31 @@
 			</nav>
 		</header>
 
-		<main class="container ota-page">
-			<h1 class="page-title">OTA Update</h1>
-			<section class="ota-section">
-				<form
-					id="ota_form"
-					class="ota-form"
-					enctype="multipart/form-data">
-					<div class="form-group">
-						<label for="firmware"
-							>Choose firmware (bin, max 2 MB)</label
-						>
-						<input
-							type="file"
-							id="firmware"
-							name="firmware"
-							accept=".bin"
-							required />
-					</div>
-					<button type="submit" class="btn btn--primary">
-						Upload
-					</button>
-				</form>
-				<div id="progress_wrapper" class="progress-wrapper" hidden>
-					<progress id="ota_progress" value="0" max="100"></progress>
-					<div class="progress-text">
-						<span>Uploaded </span><span id="progress_text">0%</span>
-					</div>
-				</div>
+		<main class="container">
+			<section class="ota-page">
+				<h1 class="page-title">OTA Update</h1>
+				<section class="ota-section">
+					<form id="ota_form" class="ota-form" enctype="multipart/form-data">
+						<div class="form-group">
+							<label for="firmware">Choose firmware (bin, max 2 MB)</label>
+							<input type="file" id="firmware" name="firmware" accept=".bin" required />
+						</div>
+						<button type="submit" class="btn btn--primary">
+							Upload
+						</button>
+					</form>
+					<div id="progress_wrapper" class="progress-wrapper" hidden>
+						<progress id="ota_progress" value="0" max="100"></progress>
+						<div class="progress-text">
+							<span>Uploaded </span><span id="progress_text">0%</span>
+							</div>
+							</div>
+				</section>
 			</section>
 		</main>
 
 		<footer class="site-footer">
-			<small>&copy; 2026 sensors.Africa</small>
+			<small>&copy; 2026 sensors.AFRICA</small>
 		</footer>
 
 		<script>

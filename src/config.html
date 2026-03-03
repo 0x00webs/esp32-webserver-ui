@@ -35,124 +35,102 @@
 			</nav>
 		</header>
 
-		<main class="container config-page">
-			<h1 class="page-title">Device Configuration</h1>
-			<form id="configForm" class="config-form" autocomplete="off">
-				<div class="stepper" role="tablist">
-					<button
-						type="button"
-						class="stepper__indicator stepper__indicator--active"
-						data-step="0">
-						1
-					</button>
-					<button
-						type="button"
-						class="stepper__indicator"
-						data-step="1">
-						2
-					</button>
-					<button
-						type="button"
-						class="stepper__indicator"
-						data-step="2">
-						3
-					</button>
-				</div>
+		<main class="container">
+			<section class="config-page">
+				<h1 class="page-title">Device Configuration</h1>
+				<form id="configForm" class="config-form" autocomplete="off">
+					<div class="stepper" role="tablist">
+						<button type="button" class="stepper__indicator stepper__indicator--active" data-step="0">
+							1
+						</button>
+						<button type="button" class="stepper__indicator" data-step="1">
+							2
+						</button>
+						<button type="button" class="stepper__indicator" data-step="2">
+							3
+						</button>
+					</div>
 
-				<fieldset class="step step--active" data-step="0">
-					<legend>WiFi Settings</legend>
-					<div class="form-group">
-						<label>Available hotspots</label>
-						<ul class="hotspots-list" id="hotspots-list">
-							<li class="hotspot">Loading...</li>
-						</ul>
-					</div>
-					<div class="form-group">
-						<label for="ssid">WiFi SSID</label>
-						<!-- allow manual editing as well; value will still be set when a hotspot is clicked -->
-						<input type="text" id="ssid" name="ssid" />
-					</div>
-					<div class="form-group password-group">
-						<label for="wifiPwd">WiFi Password</label>
-						<div class="password-wrapper">
-							<input
-								type="password"
-								id="wifiPwd"
-								name="wifiPwd" />
-							<button
-								type="button"
-								class="toggle-password"
-								aria-label="Show password">
-								👁️
+					<fieldset class="step step--active" data-step="0">
+						<legend>WiFi Settings</legend>
+						<div class="form-group">
+							<label>Available hotspots</label>
+							<ul class="hotspots-list" id="hotspots-list">
+								<li class="hotspot">Loading...</li>
+							</ul>
+						</div>
+						<div class="form-group">
+							<label for="ssid">WiFi SSID</label>
+							<!-- allow manual editing as well; value will still be set when a hotspot is clicked -->
+							<input type="text" id="ssid" name="ssid" />
+						</div>
+						<div class="form-group password-group">
+							<label for="wifiPwd">WiFi Password</label>
+							<div class="password-wrapper">
+								<input type="password" id="wifiPwd" name="wifiPwd" />
+								<button type="button" class="toggle-password" aria-label="Show password">
+									👁️
+								</button>
+							</div>
+						</div>
+						<div class="step-btns">
+							<button type="button" class="btn btn--primary next-btn">
+								Next
+							</button>
+							</div>
+							</fieldset>
+
+					<fieldset class="step" data-step="1">
+						<legend>GSM &amp; SIM Config</legend>
+						<div class="form-group">
+							<label for="apn">APN Username</label>
+							<input type="text" id="apn" name="apn" />
+						</div>
+						<div class="form-group">
+							<label for="apn_pwd">APN Password</label>
+							<input type="text" id="apn_pwd" name="apn_pwd" />
+						</div>
+						<div class="form-group">
+							<label for="simPin">SIM PIN</label>
+							<input type="password" id="simPin" name="simPin" maxlength="8" />
+						</div>
+						<div class="step-btns">
+							<button type="button" class="btn prev-btn">
+								Previous
+							</button>
+							<button type="button" class="btn btn--primary next-btn">
+								Next
+							</button>
+							</div>
+							</fieldset>
+
+					<fieldset class="step" data-step="2">
+						<legend>Power Options</legend>
+						<div class="form-group toggle-switch">
+							<label for="powerSaver">Power Saver</label>
+							<label class="switch">
+								<input type="checkbox" id="powerSaver" name="powerSaver" />
+								<span class="slider"></span>
+							</label>
+						</div>
+						<div class="step-btns">
+							<button type="button" class="btn prev-btn">
+								Previous
+							</button>
+							<button type="submit" class="btn btn--primary submit-btn">
+								Save Config
 							</button>
 						</div>
-					</div>
-					<div class="step-btns">
-						<button type="button" class="btn btn--primary next-btn">
-							Next
-						</button>
-					</div>
-				</fieldset>
-
-				<fieldset class="step" data-step="1">
-					<legend>GSM &amp; SIM Config</legend>
-					<div class="form-group">
-						<label for="apn">APN Username</label>
-						<input type="text" id="apn" name="apn" />
-					</div>
-					<div class="form-group">
-						<label for="apn_pwd">APN Password</label>
-						<input type="text" id="apn_pwd" name="apn_pwd" />
-					</div>
-					<div class="form-group">
-						<label for="simPin">SIM PIN</label>
-						<input
-							type="password"
-							id="simPin"
-							name="simPin"
-							maxlength="8" />
-					</div>
-					<div class="step-btns">
-						<button type="button" class="btn prev-btn">
-							Previous
-						</button>
-						<button type="button" class="btn btn--primary next-btn">
-							Next
-						</button>
-					</div>
-				</fieldset>
-
-				<fieldset class="step" data-step="2">
-					<legend>Power Options</legend>
-					<div class="form-group toggle-switch">
-						<label for="powerSaver">Power Saver</label>
-						<label class="switch">
-							<input
-								type="checkbox"
-								id="powerSaver"
-								name="powerSaver" />
-							<span class="slider"></span>
-						</label>
-					</div>
-					<div class="step-btns">
-						<button type="button" class="btn prev-btn">
-							Previous
-						</button>
-						<button
-							type="submit"
-							class="btn btn--primary submit-btn">
-							Save Config
-						</button>
-					</div>
-				</fieldset>
-			</form>
-			<button type="button" class="btn btn--secondary skip-btn">
-				Skip device config
-			</button>
+					</fieldset>
+					</form>
+					<button type="button" class="btn btn--secondary skip-btn">
+						Skip device config
+					</button>
+			</section>
 		</main>
 
 		<footer class="site-footer">
-			<small>&copy; 2026 sensors.Africa</small>
+			<small>&copy; 2026 sensors.AFRICA</small>
 		</footer>
 
 		<script>
