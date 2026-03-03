@@ -9,53 +9,74 @@
 	</head>
 	<body>
 		<header class="site-header">
-			<div class="branding">
-				<img src="sensors_logo.png" alt="Sensors logo" class="logo" />
-				<span class="device-id" id="device-id">--</span>
+			<div class="container">
+				<div class="branding">
+					<img
+						src="sensors_logo.png"
+						alt="Sensors logo"
+						class="logo" />
+					<span class="device-id" id="device-id">--</span>
+				</div>
+				<nav class="main-nav">
+					<button
+						class="nav-toggle"
+						aria-label="Toggle navigation"
+						aria-expanded="false">
+						<div></div>
+					</button>
+					<div class="nav-backdrop"></div>
+					<ul class="nav-list" id="navList">
+						<li><a href="/" class="nav-link">Home</a></li>
+						<li>
+							<a href="device-details.html" class="nav-link"
+								>Device Details</a
+							>
+						</li>
+						<li><a href="ota.html" class="nav-link">OTA</a></li>
+						<li>
+							<a href="file-system.html" class="nav-link"
+								>File Viewer</a
+							>
+						</li>
+					</ul>
+				</nav>
 			</div>
-			<nav class="main-nav">
-				<button
-					class="nav-toggle"
-					aria-label="Toggle navigation"
-					aria-expanded="false">
-					<div></div>
-				</button>
-				<ul class="nav-list" id="navList">
-					<li><a href="/" class="nav-link">Home</a></li>
-					<li>
-						<a href="device-details.html" class="nav-link"
-							>Device Details</a
-						>
-					</li>
-					<li><a href="ota.html" class="nav-link">OTA</a></li>
-					<li>
-						<a href="file-system.html" class="nav-link"
-							>File Viewer</a
-						>
-					</li>
-				</ul>
-			</nav>
+			<!-- .container -->
 		</header>
 
 		<main class="container">
 			<section class="ota-page">
 				<h1 class="page-title">OTA Update</h1>
 				<section class="ota-section">
-					<form id="ota_form" class="ota-form" enctype="multipart/form-data">
+					<form
+						id="ota_form"
+						class="ota-form"
+						enctype="multipart/form-data">
 						<div class="form-group">
-							<label for="firmware">Choose firmware (bin, max 2 MB)</label>
-							<input type="file" id="firmware" name="firmware" accept=".bin" required />
+							<label for="firmware"
+								>Choose firmware (bin, max 2 MB)</label
+							>
+							<input
+								type="file"
+								id="firmware"
+								name="firmware"
+								accept=".bin"
+								required />
 						</div>
 						<button type="submit" class="btn btn--primary">
 							Upload
 						</button>
 					</form>
 					<div id="progress_wrapper" class="progress-wrapper" hidden>
-						<progress id="ota_progress" value="0" max="100"></progress>
+						<progress
+							id="ota_progress"
+							value="0"
+							max="100"></progress>
 						<div class="progress-text">
-							<span>Uploaded </span><span id="progress_text">0%</span>
-							</div>
-							</div>
+							<span>Uploaded </span
+							><span id="progress_text">0%</span>
+						</div>
+					</div>
 				</section>
 			</section>
 		</main>

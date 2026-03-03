@@ -11,10 +11,22 @@ function initCommon() {
     if (!navToggle.querySelector('div'))
       navToggle.appendChild(document.createElement('div'));
 
+    // backdrop for closing by clicking outside the drawer
+    const backdrop = document.querySelector('.nav-backdrop');
+
+    function closeMenu() {
+      navList.classList.remove('open');
+      navToggle.classList.remove('open');
+      if (backdrop) backdrop.classList.remove('open');
+      navToggle.setAttribute('aria-expanded', 'false');
+    }
+
     navToggle.setAttribute('aria-expanded', 'false');
     navToggle.addEventListener('click', () => {
-      const expanded = navList.classList.toggle('active');
+      // use "open" class on the list so CSS responsive rules apply
+      const expanded = navList.classList.toggle('open');
       navToggle.classList.toggle('open', expanded);
+      if (backdrop) backdrop.classList.toggle('open', expanded);
       navToggle.setAttribute('aria-expanded', expanded);
     });
 
@@ -26,15 +38,18 @@ function initCommon() {
       }
 
       a.addEventListener('click', () => {
-        navList.classList.remove('active');
-        navToggle.classList.remove('open');
-        navToggle.setAttribute('aria-expanded', 'false');
+        closeMenu();
         navList
           .querySelectorAll('a')
           .forEach((link) => link.classList.remove('active'));
         a.classList.add('active');
       });
     });
+
+    // clicking backdrop closes drawer
+    if (backdrop) {
+      backdrop.addEventListener('click', closeMenu);
+    }
   }
 
   const deviceIdEl = document.getElementById('device-id');

@@ -4,3 +4,4 @@ output/
 # local dev server certs
 *.key
 *.crt
+test
