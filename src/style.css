@@ -13,21 +13,12 @@
 html {
 	font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 	/* 1rem = 10px */
-	font-size: 62.5%;
+	/* font-size: 62.5%; */
 	scroll-behavior: smooth;
 	height: 100%;
 }
 
 /* body take all the available height and width, use flex for sticky footer */
-margin: 0;
-font-family: var(--font);
-color: var(--text);
-background: var(--bg);
-min-height: 100vh;
-min-height: 100dvh;
-display: flex;
-flex-direction: column;
-height: 100%;
 body {
 	margin: 0;
 	font-family: var(--font);
