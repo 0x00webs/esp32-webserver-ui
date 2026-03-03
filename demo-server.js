@@ -1,6 +1,8 @@
 // Demo server for sensors-webserver-pages
 const express = require('express');
 const path = require('path');
+const multer = require('multer');
+const upload = multer({ dest: 'uploads/' });
 const app = express();
 const PORT = process.env.PORT || 3000;
 console.log('Starting demo server...');
@@ -45,11 +47,6 @@ app.get('/sensor-data', (_req, res) => {
 	});
 });
 
-// OTA upload demo endpoints (does not actually store files)
-app.post('/ota-upload', (_req, res) => {
-	res.json({ status: 'success', message: 'Firmware uploaded (demo)' });
-});
-
 // Single endpoint for all device details
 app.get('/device-details', (_req, res) => {
 	res.json({
@@ -63,6 +60,36 @@ app.get('/device-details', (_req, res) => {
 		},
 		wifi: {},
 	});
+});
+
+// available hotspots endpoint
+app.get('/available-hotspots', (_req, res) => {
+	res.json({
+		'Home WiFi': {
+			rssi: -45,
+			encType: 'WPA2',
+		},
+		'Office WiFi': {
+			rssi: -60,
+			encType: 'WPA3',
+		},
+		'Coffee Shop': {
+			rssi: -70,
+			encType: 'Open',
+		},
+	});
+});
+
+// Save OTA upload files to a temporary directory (for demo purposes only)
+app.post('/ota_upload', upload.single('firmware'), (req, res) => {
+	console.log('Received OTA upload:', req.file);
+	res.json({ status: 'success', message: 'Firmware uploaded (demo)' });
+});
+
+// save config endpoint
+app.post('/save-config', express.json(), (req, res) => {
+	console.log('Received config data:', req.body);
+	res.json({ status: 'Config received' });
 });
 
 app.listen(PORT, () => {

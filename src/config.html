@@ -10,47 +10,69 @@
 
 	<body>
 		<header class="site-header">
-			<div class="branding">
-				<img src="sensors_logo.png" alt="Sensors logo" class="logo" />
-				<span class="device-id" id="device-id">--</span>
+			<div class="container">
+				<div class="branding">
+					<img
+						src="sensors_logo.png"
+						alt="Sensors logo"
+						class="logo" />
+					<span class="device-id" id="device-id">--</span>
+				</div>
+				<nav class="main-nav">
+					<button
+						class="nav-toggle"
+						aria-label="Toggle navigation"
+						aria-expanded="false">
+						<div></div>
+					</button>
+					<div class="nav-backdrop"></div>
+					<ul class="nav-list" id="navList">
+						<li><a href="/" class="nav-link">Home</a></li>
+						<li>
+							<a href="device-details.html" class="nav-link"
+								>Device Details</a
+							>
+						</li>
+						<li><a href="ota.html" class="nav-link">OTA</a></li>
+						<li>
+							<a href="file-system.html" class="nav-link"
+								>File Viewer</a
+							>
+						</li>
+					</ul>
+				</nav>
 			</div>
-			<nav class="main-nav">
-				<button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">
-					<div></div>
-				</button>
-				<ul class="nav-list" id="navList">
-					<li><a href="/" class="nav-link">Home</a></li>
-					<li>
-						<a href="device-details.html" class="nav-link"
-							>Device Details</a
-						>
-					</li>
-					<li><a href="ota.html" class="nav-link">OTA</a></li>
-					<li>
-						<a href="file-system.html" class="nav-link"
-							>File Viewer</a
-						>
-					</li>
-				</ul>
-			</nav>
 		</header>
 
 		<main class="container">
 			<section class="config-page">
 				<h1 class="page-title">Device Configuration</h1>
-				<form id="configForm" class="config-form" autocomplete="off">
-					<div class="stepper" role="tablist">
-						<button type="button" class="stepper__indicator stepper__indicator--active" data-step="0">
-							1
-						</button>
-						<button type="button" class="stepper__indicator" data-step="1">
-							2
-						</button>
-						<button type="button" class="stepper__indicator" data-step="2">
-							3
-						</button>
-					</div>
+				<div class="stepper" role="tablist">
+					<button
+						type="button"
+						class="stepper__indicator stepper__indicator--active"
+						data-step="0">
+						1
+					</button>
+					<button
+						type="button"
+						class="stepper__indicator"
+						data-step="1">
+						2
+					</button>
+					<button
+						type="button"
+						class="stepper__indicator"
+						data-step="2">
+						3
+					</button>
+				</div>
 
+				<form
+					id="wifiForm"
+					class="config-form step step--active"
+					autocomplete="off"
+					data-step="0">
 					<fieldset class="step step--active" data-step="0">
 						<legend>WiFi Settings</legend>
 						<div class="form-group">
@@ -67,19 +89,33 @@
 						<div class="form-group password-group">
 							<label for="wifiPwd">WiFi Password</label>
 							<div class="password-wrapper">
-								<input type="password" id="wifiPwd" name="wifiPwd" />
-								<button type="button" class="toggle-password" aria-label="Show password">
+								<input
+									type="password"
+									id="wifiPwd"
+									name="wifiPwd" />
+								<button
+									type="button"
+									class="toggle-password"
+									aria-label="Show password">
 									👁️
 								</button>
 							</div>
 						</div>
 						<div class="step-btns">
-							<button type="button" class="btn btn--primary next-btn">
+							<button
+								type="button"
+								class="btn btn--primary next-btn">
 								Next
 							</button>
-							</div>
-							</fieldset>
+						</div>
+					</fieldset>
+				</form>
 
+				<form
+					id="gsmForm"
+					class="config-form step"
+					autocomplete="off"
+					data-step="1">
 					<fieldset class="step" data-step="1">
 						<legend>GSM &amp; SIM Config</legend>
 						<div class="form-group">
@@ -92,24 +128,39 @@
 						</div>
 						<div class="form-group">
 							<label for="simPin">SIM PIN</label>
-							<input type="password" id="simPin" name="simPin" maxlength="8" />
+							<input
+								type="password"
+								id="simPin"
+								name="simPin"
+								maxlength="8" />
 						</div>
 						<div class="step-btns">
 							<button type="button" class="btn prev-btn">
 								Previous
 							</button>
-							<button type="button" class="btn btn--primary next-btn">
+							<button
+								type="button"
+								class="btn btn--primary next-btn">
 								Next
 							</button>
-							</div>
-							</fieldset>
+						</div>
+					</fieldset>
+				</form>
 
+				<form
+					id="powerForm"
+					class="config-form step"
+					autocomplete="off"
+					data-step="2">
 					<fieldset class="step" data-step="2">
 						<legend>Power Options</legend>
 						<div class="form-group toggle-switch">
 							<label for="powerSaver">Power Saver</label>
 							<label class="switch">
-								<input type="checkbox" id="powerSaver" name="powerSaver" />
+								<input
+									type="checkbox"
+									id="powerSaver"
+									name="powerSaver" />
 								<span class="slider"></span>
 							</label>
 						</div>
@@ -117,22 +168,23 @@
 							<button type="button" class="btn prev-btn">
 								Previous
 							</button>
-							<button type="submit" class="btn btn--primary submit-btn">
+							<button
+								type="submit"
+								class="btn btn--primary submit-btn">
 								Save Config
 							</button>
 						</div>
 					</fieldset>
-					</form>
-					<button type="button" class="btn btn--secondary skip-btn">
-						Skip device config
-					</button>
+				</form>
+				<button type="button" class="btn btn--secondary skip-btn">
+					Skip device config
+				</button>
 			</section>
 		</main>
 
 		<footer class="site-footer">
 			<small>&copy; 2026 sensors.AFRICA</small>
 		</footer>
-
 		<script>
 			(function () {
 				let currentStep = 0;
@@ -174,9 +226,32 @@
 					);
 				});
 
-				document
-					.getElementById('configForm')
-					.addEventListener('submit', function (e) {
+				function collectFormData() {
+					const data = {};
+					document.querySelectorAll('form.step').forEach((form) => {
+						new FormData(form).forEach((v, k) => {
+							if (typeof v === 'string' && v.trim() === '')
+								return;
+							data[k] = v;
+						});
+					});
+					if (!data.ssid) {
+						delete data.ssid;
+						delete data.wifiPwd;
+					}
+					if (!data.apn) {
+						delete data.apn;
+						delete data.apn_pwd;
+					}
+					if (!('powerSaver' in data)) {
+						data.powerSaver = 'off';
+					}
+					return data;
+				}
+
+				const powerForm = document.getElementById('powerForm');
+				if (powerForm) {
+					powerForm.addEventListener('submit', function (e) {
 						e.preventDefault();
 						if (
 							!confirm(
@@ -185,21 +260,7 @@
 						)
 							return;
 
-						const formData = new FormData(this);
-						const data = {};
-						if (formData.get('ssid') === '') {
-							formData.delete('ssid');
-							formData.delete('wifiPwd');
-						}
-						if (formData.get('apn') === '') {
-							formData.delete('apn');
-							formData.delete('apn_pwd');
-						}
-						if (!formData.get('powerSaver'))
-							formData.set('powerSaver', 'off');
-						formData.forEach((v, k) => {
-							if (v.trim() !== '') data[k] = v;
-						});
+						const data = collectFormData();
 						if (Object.keys(data).length === 0) {
 							alert('Cannot submit empty form!');
 							return;
@@ -215,11 +276,11 @@
 								window.location.href = '/';
 							});
 					});
+				}
 
-				// --- UX helpers ---------------------------------------------------
-				document
-					.querySelector('.toggle-password')
-					.addEventListener('click', function () {
+				const toggleBtn = document.querySelector('.toggle-password');
+				if (toggleBtn) {
+					toggleBtn.addEventListener('click', function () {
 						const pwd = document.getElementById('wifiPwd');
 						if (pwd.type === 'password') {
 							pwd.type = 'text';
@@ -231,21 +292,26 @@
 							this.setAttribute('aria-label', 'Show password');
 						}
 					});
-				document
-					.querySelector('.skip-btn')
-					.addEventListener('click', function () {
+				}
+
+				const skipBtn = document.querySelector('.skip-btn');
+				if (skipBtn) {
+					skipBtn.addEventListener('click', function () {
 						window.location.href = '/';
 					});
+				}
 
 				function loadDeviceSettings() {
 					getAvailableWifiHotspots();
 				}
 				function getAvailableWifiHotspots() {
 					const list = document.getElementById('hotspots-list');
+					if (!list) return;
 					list.innerHTML = '<li class="hotspot">Loading...</li>';
 					fetch('/available-hotspots')
 						.then((r) => r.json())
 						.then((hotspots) => {
+							console.log('Available hotspots:', hotspots);
 							let html = '';
 							let first = '';
 							for (const ssid in hotspots) {
@@ -264,7 +330,6 @@
 							list.innerHTML =
 								html ||
 								'<li class="hotspot">No hotspots found</li>';
-							// attach click listeners now that the items exist
 							list.querySelectorAll('.hotspot').forEach((el) => {
 								el.addEventListener('click', () =>
 									selectHotspot(el.dataset.ssid),
@@ -286,7 +351,8 @@
 								el.dataset.ssid == ssid,
 							),
 						);
-					document.getElementById('ssid').value = ssid;
+					const ssidEl = document.getElementById('ssid');
+					if (ssidEl) ssidEl.value = ssid;
 				}
 				window.loadDeviceSettings = loadDeviceSettings;
 				loadDeviceSettings();
