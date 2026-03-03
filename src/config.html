@@ -84,7 +84,7 @@
 						<div class="form-group">
 							<label for="ssid">WiFi SSID</label>
 							<!-- allow manual editing as well; value will still be set when a hotspot is clicked -->
-							<input type="text" id="ssid" name="ssid" />
+							<input type="text" id="ssid" name="ssid" autocomplete="ssid" />
 						</div>
 						<div class="form-group password-group">
 							<label for="wifiPwd">WiFi Password</label>
@@ -92,7 +92,8 @@
 								<input
 									type="password"
 									id="wifiPwd"
-									name="wifiPwd" />
+									name="wifiPwd"
+									autocomplete="current-password" />
 								<button
 									type="button"
 									class="toggle-password"
@@ -120,11 +121,11 @@
 						<legend>GSM &amp; SIM Config</legend>
 						<div class="form-group">
 							<label for="apn">APN Username</label>
-							<input type="text" id="apn" name="apn" />
+							<input type="text" id="apn" name="apn" autocomplete="apn" />
 						</div>
 						<div class="form-group">
 							<label for="apn_pwd">APN Password</label>
-							<input type="text" id="apn_pwd" name="apn_pwd" />
+							<input type="text" id="apn_pwd" name="apn_pwd" autocomplete="apn_pwd"/>
 						</div>
 						<div class="form-group">
 							<label for="simPin">SIM PIN</label>
@@ -132,7 +133,8 @@
 								type="password"
 								id="simPin"
 								name="simPin"
-								maxlength="8" />
+								maxlength="8"
+								autocomplete="current-password" />
 						</div>
 						<div class="step-btns">
 							<button type="button" class="btn prev-btn">
@@ -253,28 +255,31 @@
 				if (powerForm) {
 					powerForm.addEventListener('submit', function (e) {
 						e.preventDefault();
-						if (
-							!confirm(
-								'Are you sure you want to save these settings?',
+						// run confirm asynchronously so handler returns immediately
+						setTimeout(() => {
+							if (
+								!confirm(
+									'Areyousureyouwanttosavethesesettings?',
+								)
 							)
-						)
-							return;
+								return;
 
-						const data = collectFormData();
-						if (Object.keys(data).length === 0) {
-							alert('Cannot submit empty form!');
-							return;
-						}
-						fetch('/save-config', {
-							method: 'POST',
-							headers: { 'Content-Type': 'application/json' },
-							body: JSON.stringify(data),
-						})
-							.then((r) => r.json())
-							.then(console.log)
-							.then(() => {
-								window.location.href = '/';
-							});
+							const data = collectFormData();
+							if (Object.keys(data).length === 0) {
+								alert('Cannot submit empty form!');
+								return;
+							}
+							fetch('/save-config', {
+								method: 'POST',
+								headers: { 'Content-Type': 'application/json' },
+								body: JSON.stringify(data),
+							})
+								.then((r) => r.json())
+								.then(console.log)
+								.then(() => {
+									window.location.href = '/';
+								});
+						}, 0);
 					});
 				}
 
